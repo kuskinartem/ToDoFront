@@ -1,0 +1,40 @@
+.main-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+#content-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.task-container {
+    display: flex;
+    align-items: center;
+}
+
+.text-task {
+    font-size: 28px;
+    color: black;
+    margin-left: 8px;
+    padding: 10px;
+}
+
+.done-text {
+    color: rgba(0, 0, 0, 0.3);
+    text-decoration: line-through;
+}
+
+.checkbox {
+    width: 20px;
+    height: 20px;
+}
+
+.Delete {
+    margin-left: 320px;
+}
