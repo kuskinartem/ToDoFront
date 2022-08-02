@@ -16,6 +16,7 @@
 .task-container {
     display: flex;
     align-items: center;
+    flex-direction: row-reverse;
 }
 
 .text-task {
@@ -37,4 +38,8 @@
 
 .Delete {
     margin-left: 320px;
+}
+
+.header__task {
+    display: inline-flex;
 }
