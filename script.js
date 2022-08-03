@@ -9,6 +9,8 @@ const fetchHeaders = {
 window.onload = async () => {
   try {
     const resp = await fetch(`${url}/tasks`);
+    const result = await resp.json();
+    allTasks = result;
     render();
   } catch {
     console.error('Task retrieval error');
