@@ -9,8 +9,6 @@ const fetchHeaders = {
 window.onload = async () => {
   try {
     const resp = await fetch(`${url}/tasks`);
-    let result = await resp.json();
-    console.log(result);
     render();
   } catch {
     console.error('Task retrieval error');
@@ -20,9 +18,10 @@ window.onload = async () => {
 const taskAdd = async () => {
   try {
     const input = document.getElementById("add-task");
-    if (input === null) {
+    if (!input) {
       return;
     }
+
     const resp = await fetch(`${url}/tasks`, {
       method: 'POST',
       headers: fetchHeaders,
@@ -30,8 +29,9 @@ const taskAdd = async () => {
         text: input.value,
       })
     });
+
     const result = await resp.json();
-    allTasks.push(result);
+    allTasks.unshift(result);
     localStorage.setItem('tasks', JSON.stringify(allTasks));
     input.value = '';
     render();
@@ -49,12 +49,14 @@ const onChangeCheckbox = async (_id, isCheck) => {
         isCheck: !isCheck
       })
     });
+
     const result = await resp.json();
     allTasks.forEach(item => {
       if (result._id === item._id) {
         item.isCheck = result.isCheck
       }
     });
+
     localStorage.setItem('tasks', JSON.stringify(allTasks));
     render();
   } catch {
@@ -63,8 +65,6 @@ const onChangeCheckbox = async (_id, isCheck) => {
 }
 
 const cancelEdit = (item) => {
-  const { _id, text } = item;
-  activeEditTask = _id;
   activeEditTask = null
   render();
 }
@@ -75,10 +75,12 @@ const onDeleteTask = async (_id) => {
       method: 'DELETE',
       headers: fetchHeaders
     });
+
     const result = await resp.json();
     if (result.deletedCount > 0) {
       allTasks = allTasks.filter(item => (item._id !== _id));
     }
+
     localStorage.setItem('tasks', JSON.stringify(allTasks));
     render();
   } catch {
@@ -92,9 +94,7 @@ const updateTaskText = async (_id) => {
     if (!input || !input.value) {
       return;
     }
-    if (input.value.trim() === '') {
-      console.error('Поле пустое');
-    }
+
     const resp = await fetch(`${url}/tasks/${_id}`, {
       method: 'PATCH',
       headers: fetchHeaders,
@@ -102,7 +102,9 @@ const updateTaskText = async (_id) => {
         text: input.value
       })
     });
+
     const result = await resp.json();
+
     allTasks.forEach(item => {
       if (item._id === result._id) {
         item.text = result.text;
@@ -150,18 +152,19 @@ const editTask = (item) => {
   imageDone.src = 'img/done.svg';
   buttonDoneTask.id = `task_button_done${_id}`;
   imageDone.alt = '';
-  buttonDoneTask.append(imageDone);
   buttonDoneTask.onclick = () => {
     updateTaskText(_id);
   };
+  buttonDoneTask.append(imageDone);
 
   cancel.src = 'img/cancel.svg';
   buttonCancelEdit.id = `task_cancel${_id}`;
   cancel.alt = '';
-  buttonCancelEdit.append(cancel);
   buttonCancelEdit.onclick = (item) => {
     cancelEdit(item);
-  }
+  };
+  buttonCancelEdit.append(cancel);
+
   buttonsNewTask.append(buttonDoneTask);
   buttonsNewTask.append(buttonCancelEdit);
   newTask.append(newText, buttonsNewTask);
@@ -172,14 +175,14 @@ const editTask = (item) => {
 
 const render = () => {
   const content = document.getElementById('content-page');
-  while (content.firstChild) {
-    content.removeChild(content.firstChild);
-  }
+  content.replaceChildren([])
+
   allTasks.sort((a, b) => {
     if (a.isCheck < b.isCheck) {
       return -1
     }
   });
+
   allTasks.forEach((item) => {
     const { text, isCheck, _id } = item;
 
@@ -204,25 +207,28 @@ const render = () => {
     imageEdit.src = 'img/edit.svg';
     buttonEditTask.id = `task_button_edit${_id}`;
     imageEdit.alt = '';
-    buttonEditTask.append(imageEdit);
     buttonEditTask.onclick = () => {
       editTask(item);
     };
+    buttonEditTask.append(imageEdit);
+
 
     const imageDelete = document.createElement('img');
     const buttonDeleteTask = document.createElement('button');
     imageDelete.src = 'img/delete.svg';
     buttonDeleteTask.id = `task_button_delete${_id}`
     imageDelete.alt = '';
-    buttonDeleteTask.append(imageDelete);
     buttonDeleteTask.onclick = () => {
       onDeleteTask(_id);
-    }
+    };
+    buttonDeleteTask.append(imageDelete);
+
     container.append(buttonDeleteTask);
     container.append(buttonEditTask);
     container.append(newText);
     container.append(checkbox);
     content.append(container);
+
     if (isCheck) {
       buttonEditTask.remove()
     }
