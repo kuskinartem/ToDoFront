@@ -95,7 +95,7 @@ const updateTaskText = async (_id) => {
     if (input.value.trim() === '') {
       console.error('Поле пустое');
     }
-    const resp = await fetch(`${url}/tasks/${_id}/text`, {
+    const resp = await fetch(`${url}/tasks/${_id}`, {
       method: 'PATCH',
       headers: fetchHeaders,
       body: JSON.stringify({
@@ -175,7 +175,11 @@ const render = () => {
   while (content.firstChild) {
     content.removeChild(content.firstChild);
   }
-  allTasks.sort((a, b) => a.isCheck > b.isCheck ? 1 : a.isCheck < b.isCheck ? -1 : 0);
+  allTasks.sort((a, b) => {
+    if (a.isCheck < b.isCheck) {
+      return -1
+    }
+  });
   allTasks.forEach((item) => {
     const { text, isCheck, _id } = item;
 
@@ -190,7 +194,6 @@ const render = () => {
     checkbox.onchange = () => {
       onChangeCheckbox(_id, isCheck);
     };
-    const buttonsTask = document.createElement('div');
 
     const newText = document.createElement('p');
     newText.innerText = text;
