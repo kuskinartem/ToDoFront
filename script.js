@@ -148,7 +148,6 @@ const editTask = (item) => {
   newTask.className = 'header__task';
   newTask.id = `task-${_id}`;
 
-
   imageDone.src = 'img/done.svg';
   buttonDoneTask.id = `task_button_done${_id}`;
   imageDone.alt = '';
@@ -170,7 +169,6 @@ const editTask = (item) => {
   newTask.append(newText, buttonsNewTask);
   task.replaceWith(newTask)
   localStorage.setItem('tasks', JSON.stringify(allTasks));
-
 }
 
 const render = () => {
@@ -211,7 +209,6 @@ const render = () => {
       editTask(item);
     };
     buttonEditTask.append(imageEdit);
-
 
     const imageDelete = document.createElement('img');
     const buttonDeleteTask = document.createElement('button');
